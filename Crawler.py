@@ -23,4 +23,4 @@ chrome_options.add_argument('--proxy-server=socks5://%s' % tor_proxy) # 프록�
 driver = webdriver.Chrome(executable_path='chromedriver.exe', options=chrome_options)
 
 for key in Key_word.search_engine:
-    
+    if
