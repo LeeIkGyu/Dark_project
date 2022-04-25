@@ -7,7 +7,6 @@ import time
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import os
-import Key_word
 
 tor_proxy = "127.0.0.1:9150" # Tor 브라우저의 프록시 서버
 
@@ -22,5 +21,3 @@ chrome_options.add_argument('--user-data=C:\\Users\\SCHCsRC\\AppData\\Local\\Goo
 chrome_options.add_argument('--proxy-server=socks5://%s' % tor_proxy) # 프록시
 driver = webdriver.Chrome(executable_path='chromedriver.exe', options=chrome_options)
 
-for key in Key_word.search_engine:
-    if
