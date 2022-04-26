@@ -30,5 +30,5 @@ for item in category:
 # 한국어, 일본어, 중국어(간체), 러시아어
 lang = ["ko", "ja", "zh-CN", "ru"]
 
-for i in lang:
-    get_translate(category_word, i)
+for i, j in zip(category, lang):
+    get_translate(category_word[i], j)
