@@ -1,9 +1,4 @@
 import re
-from unittest import result
-
-def basicscategory():
-        basics = ['child porn', 'bitcoin', 'drug', 'counterfeit', 'murder', 'hack', 'weapon']
-        return basics
 
 def DetectCategory(porno, bitcoin, drug, counterfeit, murder, hack, weapon, htmlcode):
         child_pornregex=re.compile(porno,re.I).findall(htmlcode)

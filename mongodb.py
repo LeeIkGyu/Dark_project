@@ -20,7 +20,7 @@ def main(): ## 데이터 추가, 삭제 및 변경 동작
     DWdb_Data = DWdb.CrawlingInfo_live.insert_one(CrawlingData) #데이터 삽입 
 
     print('데이터 입력 성공')
- 
+
 
 try : 
     client = MongoClient(host = 'localhost', port = 27017) 

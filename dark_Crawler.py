@@ -29,7 +29,7 @@ class basics_parser():
         url_box=[]
         
         if Soup.text.find("Sorry, but Ahmia couldn't find results for")>=0:
-            return False
+            return "unknown"
         for a_tag in Soup.find_all('a', href=True):
             if a_tag["href"].find('url=')>=0:
                 url_box.append(a_tag['href'][a_tag["href"].find('url=')+4:])
@@ -45,7 +45,7 @@ class basics_parser():
                     onion_box = list(set(onion_box))
                     
         onion_box = list(set(onion_box))
-        return onion_box
+        return onion_box, self.basic, "https://ahmia.fi/"
     
     def tor(self):
         url = "http://torchdeedp3i2jigzjdmfpn5ttjhthh5wbmda2rr3jvqjg5p77c54dqd.onion/search?query=" + self.basic
@@ -65,7 +65,7 @@ class basics_parser():
         url_box=[]
         
         if Soup.text.find("returned 0 results.")>=0:
-            return False
+            return "unknown"
         for a_tag in Soup.find_all('a', href=True):
             url_box.append(a_tag['href'])
         
@@ -78,4 +78,4 @@ class basics_parser():
                     onion_box = list(set(onion_box))
                     
         onion_box = list(set(onion_box))
-        return onion_box
+        return onion_box, self.basic, "http://torchdeedp3i2jigzjdmfpn5ttjhthh5wbmda2rr3jvqjg5p77c54dqd.onion/"
