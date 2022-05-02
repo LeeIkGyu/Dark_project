@@ -1,6 +1,6 @@
+from ast import keyword
 from bs4 import BeautifulSoup
 import requests
-import time
 import re
 import dark_Crawler
 import basics_category
@@ -9,6 +9,7 @@ from datetime import datetime
 import Snipping_Crawler
 from pymongo import mongo_client
 import traceback
+import keyword
 
 fmt = "%Y-%m-%d %H:%M:%S %Z%z"
 
@@ -117,19 +118,25 @@ def analysis(url):
         # Error
         return 'unknown', url, nowtime,'unknown','unknown','unknown','unknown','unknown','unknown','unknown'
     
-def DBupload(url, engine, keyword):
+def DBupload(url, engine, keyword, recursion_count):
     category, url, nowtime, status, server, code, title, lang, onion_box = analysis(url)
-
-    
-    # img = 
     
     if status != 'unknown':
         if category != 'child porn':
+            # img = Snipping_Crawler
             data = {'category':category,'keyword':keyword,'engine':engine,'url':url,'time':nowtime,'state':status,'server':server,'code':str(code),'img':img,'title':title,'language':lang}
         else:
             data = {'category':category,'keyword':keyword,'engine':engine,'url':url,'time':nowtime,'state':status,'server':server,'code':str(code),'title':title,'language':lang}
         
         DB_insert(data)
+        
+        if(recursion_count<=2 and type(onion_box)==list):
+            if(url in onion_box):
+                onion_box.remove(url)
+
+			#recursion_start
+            for urls in onion_box:
+                DBupload(urls, engine, keyword, recursion_count+1)
 
 def DB_insert(data): ## 데이터 추가, 삭제 및 변경 동작
         try:     
@@ -176,10 +183,60 @@ def DB_insert(data): ## 데이터 추가, 삭제 및 변경 동작
             print('Error')
             print(traceback.format_exc())
             
-            
+
+def ResultToServer(onion_info, word):
+    recursion_count=0
+    for onion_url in onion_info.keys():
+        onion_engine=onion_info[onion_url]
+        DBupload(onion_url,onion_engine,word,recursion_count)
+
 def main():
-    print("[*] start [*]")
+    print("[*] Start [*]")
     
+    for Word in keyword.key:
+        # en
+        search_class=dark_Crawler.basics_parser(keyword.enC[Word],session)
+        dicts={}
+        ahmiavalue={'ahmia':search_class.ahmia()}
+        torSearchvalue={'torSearch':search_class.tor()}
+        dicts.update(dark_Crawler.Deduplication(torSearchvalue,ahmiavalue))
+        ResultToServer(dicts, keyword.enC[Word])
+    
+    for Word in keyword.key:
+        # ko
+        search_class=dark_Crawler.basics_parser(keyword.koC[Word],session)
+        dicts={}
+        ahmiavalue={'ahmia':search_class.ahmia()}
+        torSearchvalue={'torSearch':search_class.tor()}
+        dicts.update(dark_Crawler.Deduplication(torSearchvalue,ahmiavalue))
+        ResultToServer(dicts, keyword.koC[Word])
+    
+    for Word in keyword.key:
+        # ja
+        search_class=dark_Crawler.basics_parser(keyword.jaC[Word],session)
+        dicts={}
+        ahmiavalue={'ahmia':search_class.ahmia()}
+        torSearchvalue={'torSearch':search_class.tor()}
+        dicts.update(dark_Crawler.Deduplication(torSearchvalue,ahmiavalue))
+        ResultToServer(dicts, keyword.jaC[Word])
+    
+    for Word in keyword.key:
+        # ch
+        search_class=dark_Crawler.basics_parser(keyword.chC[Word],session)
+        dicts={}
+        ahmiavalue={'ahmia':search_class.ahmia()}
+        torSearchvalue={'torSearch':search_class.tor()}
+        dicts.update(dark_Crawler.Deduplication(torSearchvalue,ahmiavalue))
+        ResultToServer(dicts, keyword.chC[Word])
+    
+    for Word in keyword.key:
+        # ru
+        search_class=dark_Crawler.basics_parser(keyword.ruC[Word],session)
+        dicts={}
+        ahmiavalue={'ahmia':search_class.ahmia()}
+        torSearchvalue={'torSearch':search_class.tor()}
+        dicts.update(dark_Crawler.Deduplication(torSearchvalue,ahmiavalue))
+        ResultToServer(dicts, keyword.ruC[Word])
 
 if __name__ == "__main__":
     main()

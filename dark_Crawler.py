@@ -45,7 +45,7 @@ class basics_parser():
                     onion_box = list(set(onion_box))
                     
         onion_box = list(set(onion_box))
-        return onion_box, self.basic, "https://ahmia.fi/"
+        return onion_box
     
     def tor(self):
         url = "http://torchdeedp3i2jigzjdmfpn5ttjhthh5wbmda2rr3jvqjg5p77c54dqd.onion/search?query=" + self.basic
@@ -78,4 +78,23 @@ class basics_parser():
                     onion_box = list(set(onion_box))
                     
         onion_box = list(set(onion_box))
-        return onion_box, self.basic, "http://torchdeedp3i2jigzjdmfpn5ttjhthh5wbmda2rr3jvqjg5p77c54dqd.onion/"
+        return onion_box
+
+def Deduplication(*args):
+        tmpA=list(args)[0]
+        tmpB=list(args)[1]
+
+        tmpAstring=list(tmpA.keys())[0]
+        tmpBstring=list(tmpB.keys())[0]
+        alls={}
+        for i in tmpA[tmpAstring]:
+            if(tmpB[tmpBstring].count(i)>0):
+                tmpB[tmpBstring].remove(i)
+                alls.update({i:tmpAstring+' '+tmpBstring})
+            else:
+                alls.update({i:tmpAstring})
+
+        for j in tmpB[tmpBstring]:
+            alls.update({j:tmpBstring})
+
+        return alls

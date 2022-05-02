@@ -1,3 +1,5 @@
+#-*- coding: utf-8 -*-
+
 enC = {
     "child_porn" : ['child porn', 'child sexual abuse', 'child', 'interpol', 'united states department of justice', 'pornography', 'video', 'sound recording, minor', 'pedophilia', 'child grooming', 'european commission', 'internet watch foundation', 'united states reports', 'law', 'photograph', 'sculpture', 'drawing', 'photography', 'painting', 'animation', 'coercion', 'censorship', 'clothing', 'lolicon', 'nudity', 'camera', 'massachusetts', 'recording'],
 
@@ -112,7 +114,18 @@ ruC = {
 
 key = ["child_porn", "bitcoin", "drug", "murder", "hack", "weapon"]
 
-result = 0
+# 단어 중복 제거
+for i in key:
+    enC[i] = list(set(enC[i]))
 
 for i in key:
-    result += len(list(set(ruC[i])))
+    koC[i] = list(set(koC[i]))
+
+for i in key:
+    jaC[i] = list(set(jaC[i]))
+
+for i in key:
+    chC[i] = list(set(chC[i]))
+
+for i in key:
+    ruC[i] = list(set(ruC[i]))
