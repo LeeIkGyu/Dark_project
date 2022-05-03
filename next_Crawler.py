@@ -1,4 +1,3 @@
-from ast import keyword
 from bs4 import BeautifulSoup
 import requests
 import re
@@ -8,15 +7,14 @@ from pytz import timezone
 from datetime import datetime
 import Snipping_Crawler
 from pymongo import mongo_client
-import traceback
-import keyword
+import basics_keyword
 
 fmt = "%Y-%m-%d %H:%M:%S %Z%z"
 
 ANY_URL_REGEX = "^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\W\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
 
 session = requests.session()
-session.proxies = {'http':  'socks5h://localhost:9050',
+proxies = {'http':  'socks5h://localhost:9050',
             'https': 'socks5h://localhost:9050'}
 
 def info_return(htmlcode):
@@ -193,50 +191,50 @@ def ResultToServer(onion_info, word):
 def main():
     print("[*] Start [*]")
     
-    for Word in keyword.key:
+    for Word in basics_keyword.key:
         # en
-        search_class=dark_Crawler.basics_parser(keyword.enC[Word],session)
+        search_class=dark_Crawler.basics_parser(basics_keyword.enC[Word],session)
         dicts={}
         ahmiavalue={'ahmia':search_class.ahmia()}
         torSearchvalue={'torSearch':search_class.tor()}
         dicts.update(dark_Crawler.Deduplication(torSearchvalue,ahmiavalue))
-        ResultToServer(dicts, keyword.enC[Word])
+        ResultToServer(dicts, basics_keyword.enC[Word])
     
-    for Word in keyword.key:
+    for Word in basics_keyword.key:
         # ko
-        search_class=dark_Crawler.basics_parser(keyword.koC[Word],session)
+        search_class=dark_Crawler.basics_parser(basics_keyword.koC[Word],session)
         dicts={}
         ahmiavalue={'ahmia':search_class.ahmia()}
         torSearchvalue={'torSearch':search_class.tor()}
         dicts.update(dark_Crawler.Deduplication(torSearchvalue,ahmiavalue))
-        ResultToServer(dicts, keyword.koC[Word])
+        ResultToServer(dicts, basics_keyword.koC[Word])
     
-    for Word in keyword.key:
+    for Word in basics_keyword.key:
         # ja
-        search_class=dark_Crawler.basics_parser(keyword.jaC[Word],session)
+        search_class=dark_Crawler.basics_parser(basics_keyword.jaC[Word],session)
         dicts={}
         ahmiavalue={'ahmia':search_class.ahmia()}
         torSearchvalue={'torSearch':search_class.tor()}
         dicts.update(dark_Crawler.Deduplication(torSearchvalue,ahmiavalue))
-        ResultToServer(dicts, keyword.jaC[Word])
+        ResultToServer(dicts, basics_keyword.jaC[Word])
     
-    for Word in keyword.key:
+    for Word in basics_keyword.key:
         # ch
-        search_class=dark_Crawler.basics_parser(keyword.chC[Word],session)
+        search_class=dark_Crawler.basics_parser(basics_keyword.chC[Word],session)
         dicts={}
         ahmiavalue={'ahmia':search_class.ahmia()}
         torSearchvalue={'torSearch':search_class.tor()}
         dicts.update(dark_Crawler.Deduplication(torSearchvalue,ahmiavalue))
-        ResultToServer(dicts, keyword.chC[Word])
+        ResultToServer(dicts, basics_keyword.chC[Word])
     
-    for Word in keyword.key:
+    for Word in basics_keyword.key:
         # ru
-        search_class=dark_Crawler.basics_parser(keyword.ruC[Word],session)
+        search_class=dark_Crawler.basics_parser(basics_keyword.ruC[Word],session)
         dicts={}
         ahmiavalue={'ahmia':search_class.ahmia()}
         torSearchvalue={'torSearch':search_class.tor()}
         dicts.update(dark_Crawler.Deduplication(torSearchvalue,ahmiavalue))
-        ResultToServer(dicts, keyword.ruC[Word])
+        ResultToServer(dicts, basics_keyword.ruC[Word])
 
 if __name__ == "__main__":
     main()

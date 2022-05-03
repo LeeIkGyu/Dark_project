@@ -3,6 +3,7 @@ import requests
 import time
 import re
 
+start = time.time()  # 시작 시간 저장
 #Url REGEX
 ANY_URL_REGEX = "^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\W\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
 
