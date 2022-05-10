@@ -1,7 +1,8 @@
+#-*- coding: utf-8 -*-
 import re
 
-def DetectCategory(porno, bitcoin, drug, counterfeit, murder, hack, weapon, htmlcode):
-        child_pornregex=re.compile(porno,re.I).findall(htmlcode)
+def DetectCategory(porno, bitcoin, drug, counterfeit, murder, hack, weapon, htmlcode, url):
+        pornregex=re.compile(porno, re.I).findall(htmlcode)
         counterfeitregex=re.compile(counterfeit,re.I).findall(htmlcode)
         bitcoinregex=re.compile(bitcoin,re.I).findall(htmlcode)
         murderregex=re.compile(murder,re.I).findall(htmlcode)
@@ -10,7 +11,7 @@ def DetectCategory(porno, bitcoin, drug, counterfeit, murder, hack, weapon, html
         weaponregex=re.compile(weapon,re.I).findall(htmlcode)
 
         dictsvalues={
-                'child pornregex':len(child_pornregex),
+                'pornregex':len(pornregex),
                 'counterfeitregex':len(counterfeitregex),
                 'bitcoinregex':len(bitcoinregex),
                 'murderregex':len(murderregex),
@@ -18,28 +19,32 @@ def DetectCategory(porno, bitcoin, drug, counterfeit, murder, hack, weapon, html
                 'hackregex':len(hackregex),
                 'weaponregex':len(weaponregex)
                 }
-
-        maxnumber=0
-        keyword='unknown'
-
-        for item in dictsvalues.keys():
-                if(dictsvalues[item]> maxnumber ):
-                        maxnumber=(dictsvalues[item])
-                        keyword=item
-
-        if maxnumber==0:
-                return 'unknown'
         
-        return keyword.replace('regex','')
+        category = ""
+        v = 0
+        
+        for valu in dictsvalues.keys():
+                v = v + valu
+        
+        if v == 0:
+                category = "unknown"
+        else:
+                #DB에 dictsvalues 저장
+                pass
+        
+        if category == "unknown":
+                #DB에 unknown 저장
+                pass
 
 class analysis():
         
-        def __init__(self, url):
-                self.htmlcode = url
-                
+        def __init__(self, title, text, url):
+                self.title = title
+                self.htmlcode = text
+                self.url = url
         # 영어
         def enC(self):
-                child_porn = """child porn | child sexual abuse | child | interpol | united states department of justice | pornography | video | sound recording | minor | pedophilia | child grooming | european commission | internet watch foundation | united states reports | law | photograph | sculpture | drawing | photography | painting | animation | coercion | censorship | clothing | lolicon | nudity | camera | massachusetts | recording""",
+                child_porn = """child porn|child sexual abuse|child|interpol|united states department of justice|pornography|video|sound recording|minor|pedophilia|child grooming|european commission|internet watch foundation|united states reports|law|photograph|sculpture|drawing|photography|painting|animation|coercion|censorship|clothing|lolicon|nudity|camera|massachusetts|recording | CP""",
 
                 bitcoin = """bitcoin | blockchain | currency | bitcoin network | cryptography | node | satoshi nakamoto | open-source software | cryptocurrency wallet | cryptocurrency exchange | cryptocurrency | public-key cryptography | ethereum | qt | central bank | distributed ledger | university of cambridge | nobel memorial prize in economic sciences | gavin andresen | silk road | youtube | segwit | kraken | ledger | financial crimes enforcement network | forth | double-spending | lightning network | bitcoin cash | unit of account | digital signature | cryptographic hash | megabyte | winklevoss twins | synchronization | bitcoin xt | baidu | proof-of-concept | cve | leveldb | nyse | micropayment | openssl | andreas antonopoulos | bitinstant | unicode | broadcasting | banknote | malleability""",
 
@@ -53,7 +58,7 @@ class analysis():
 
                 weapon = """weapon | sword | gun | missile | spear | firearm | ammunition | artillery | projectile | rifle | pistol | bomb | bow | weaponry | arm | arms | knife | munition | cannon | guns | shotgun | tool | gunpowder | rocket | weapon system | world war ii | military | hunting | instrument | pike | bronze age | firearms | tank | war | machine gun | animal | fire ship | warfare | warhead | rock | armor | weapons | explosive | intercontinental ballistic missile | biological warfare | device | enemy | deterrent | sidearm | machine | caliber | firing | element | type | threat | target | dangerous | vehicle | warship | army | fire | weapon of mass destruction | ammo | power | armour | siege weapon | technology during world war i | injury | crime | club | teeth | axe | claw | tusk | knuckles | flamethrower | slasher | sling | lance | shaft | blade | brand | steel | hatchet | tomahawk | wmd | persuasion | suasion | stone | self-defense | hominids | bc | obsidian | neolithic | copper | metal | cyberweapon | knucks | w.m.d. | fortifications | catapult | spoke | chariot | china | cavalry | assault | handgun | europe | capable | explosives | trireme | possessing | arsenal | bombs | missiles | lethal | capability | revolver | knights | conventional | carry | nuclear | battery | ballistic | infantry | using"""
 
-                return DetectCategory(child_porn, bitcoin, drug, counterfeit, murder, hack, weapon, self.htmlcode)
+                return DetectCategory(str(child_porn), str(bitcoin), str(drug), str(counterfeit), str(murder), str(hack), str(weapon), (self.title + self.htmlcode), self.url)
 
         # 한국어
         def koC(self):
@@ -71,11 +76,11 @@ class analysis():
 
                 weapon = """무기 | 칼 | 총 | 미사일 | 창 | 화기 | 탄약 | 포 | 발사체 | 소총 | 권총 | 폭탄 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 제2차 세계 대전 | 군사 | 사냥 | 기구 | 청동기 시대 | 무기 | 탱크 | 기관총 | 동물 | 화약 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무 기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기또는 무기 | 폭발물 | 대륙간탄도미사일 | 생물전 | 장치 | 적 | 억지력 | 사이드암 | 기계 | 구경 | 사격 | 요소 | 종류 | 위협 | 표적 | 위험 | 차량 | 군함 | 군함 | 화기 | 탄약 | 전력 | 장갑 | 공성 무기 | 기술 | 세계 대전 중의 기술 | 부상 | 클럽 | 이빨 | 발톱 | 발톱 | 손가락 마디 | 화염방사기 |  슬래셔 | 슬래셔 | 랜스 | 샤프트 | 브랜드 | 스틸 | 도끼 | wmd | 설득 | 설득 | 돌 | 정당방위 | 호민관 | bc | 흑요석 | 신석기 | 구리 | 금속 | 사이버 무기 | nucks | w.d | 요새 | 캐터펄트 | 말 | 전차 | 중국 | 기병 | 공격 | 유럽 | 폭발물 | 유럽 | 폭발물 | 폭발물 | 폭발물 | 폭발물 | 폭발물 | 폭발물 | 폭발물 | 폭발물 | 폭발물 | 폭발물 | 폭발물 | 폭발물 | 폭발물 | 폭발물센서 | 폭탄 | 미사일 | 필 살기 | 능력 | 리볼버 | 기사 | 재래식 | 운반 | 핵 | 배터리 | 탄도 | 보병 | 사용"""
 
-                return DetectCategory(child_porn, bitcoin, drug, counterfeit, murder, hack, weapon, self.htmlcode)
+                return DetectCategory(str(child_porn), str(bitcoin), str(drug), str(counterfeit), str(murder), str(hack), str(weapon), (self.title + self.htmlcode), self.url)
 
         # 일본어
         def jaC(self):
-                child_porn = """児童ポルノ | 児童性的虐待 | 児童 | インターポール | アメリカ合衆国司法省 | ポルノ | ビデオ | 録音 | 未成年 | 小児愛 | 児童グルーミング | ヨーロッパ委員会 | インターネットウォッチ財団 | アメリカ合衆国の報告 | 法律 | 写真 | 彫刻 | 絵 | アニメ | 検閲 | 服 | lolicon | nude | camera | massachusetts | 録音""",
+                child_porn = """児童ポルノ | 児童性的虐待 | 児童 | インターポール | アメリカ合衆国司法省 | ポルノ | ビデオ | 録音 | 未成年 | 小児愛 | 児童グルーミング | ヨーロッパ委員会 | インターネットウォッチ財団 | アメリカ合衆国の報告 | 法律 | 写真 | 彫刻 | 絵 | アニメ | 検閲 | 服 | lolicon | nude | camer  massachusett  録音""",
         
                 bitcoin = """youtube |  ブロックチェーン |  概念証明 |  デジタル署名 |  openssl |  暗号通貨取引所 |  qt |  可鍛性 |  金融犯罪執行ネットワーク |  baidu |  アカウント単位 |  同期 |  ギャビンアンドレセン |  公開鍵暗号化 |  ノード |  イーサリアム |  オープンソースソフトウェア |  four |  ビットコイン |  ケンブリッジ大学 |  ライトニングネットワーク |  暗号通貨ウォレット |  ダブルクリック |  andasantonopoulos |  ビットコインxt |  サトシナカモト |  通貨 |  ビットコインネットワーク |  segwit |  ブロードキャスト |  banknote |  levelb |  ノーベル経済学賞 |  暗号通貨 |  暗号ハッシュ |  nyse |  シルク ロード |  cve |  中央銀行 |  kraken |  ビットコインキャッシュ |  元帳 |  ウィンクルボス双生児 |  マイクロペイメント |  bitinstant |  Unicode |  分散元帳 |  暗号化 |  メガバイト""",
 
@@ -89,7 +94,7 @@ class analysis():
 
                 weapon = """ロケット |  射撃 |  歩兵 |  ナック |  危険物 |  火 |  矛 |  要素 |  騎士 |  軍艦 |  説得 |  抑止力 |  生物戦 |  脅威 |  世界大戦中の技術 |  軍事 |  大砲 |  サイバー兵器 |  威力 |  ブレード |  金属 |  斧 |  戦争 |  新石器 |  岩 |  牙 |  標的 |  必殺技 |  爆弾 |  中国 |  剣 |  ライフル |  核 |  スポーク |  ヒト科 |  機械 |  包囲兵器 |  装置 |  ブランド |  銅 |  火炎放射器 |  所持 |  兵 器システム |  陸軍 |  負傷 |  護身術 |  戦車 |  保有 |  消防艦 |  青銅器 |  口径 |  発射体 |  スリング |  ヨーロッパ |  トライム |  シャフト |  ハンドガン |  車両 |  ミサイル |  能 力 |  型式 |   弓 |  兵器 |  ランス |  犯罪 |  通常 |  装甲 |  弾薬 |  キャリー |  大量破壊 兵器 |  第二次世界大戦 |  道具 |  兵器扇形 |  黒曜石 |  サイドアーム |  大陸間弾道ミサイル |  カタパルト |  爪 |  バッテリー |  ピストル |  銃 |  武器又は武器 |  石 |  bc |  w.m.d. |  火薬 |  砲 |  騎兵 |  ショットガン |  器具 |  トマホーク |  弾道 |  リボルバー |  鋼 |  槍 |  使用 |  スラッシャー |  ナイフ |   火器 |  狩猟 |  機関 銃 |   ナックルズ |  クラブ |  武器 |  攻撃 |  敵 |  動物 |  要塞 |  大量破壊兵器 |  爆発物"""
 
-                return DetectCategory(child_porn, bitcoin, drug, counterfeit, murder, hack, weapon, self.htmlcode)
+                return DetectCategory(str(child_porn), str(bitcoin), str(drug), str(counterfeit), str(murder), str(hack), str(weapon), (self.title + self.htmlcode), self.url)
 
         # 중국어
         def chC(self):
@@ -107,7 +112,7 @@ class analysis():
 
                 weapon = """武器 | 剑 | 枪 | 导弹 | 矛 | 火器 | 弹药 | 炮 | 射弹 | 步枪 | 手枪 | 炸弹 | 弓 | 武器 | 武器 | 武器 | 武器 | 武器 | 武器 | 武器 | 大炮 | 枪 | 枪 | 枪 | 猎枪 | 工具 | 火药 | 火箭 | 武器系统 | 二战 | 军事 | 狩猎 | 武器 | 枪械 | 青铜器 | 坦克 | 战争 | 战争 | 动物 | 消防船 | 战争 | 弹头 | 岩石 | 武器系统或武器 | 爆炸物 | 洲际弹道导弹 | 生物战 | 敌方 | 威慑 | 侧肩 | 机枪 | 口径 | 射击 | 元件 | 类型 | 威胁 | 目标 | 危险 | 车辆 | 军舰 | 火种 | 大规模杀伤性武器 | 弹 药 | 弹药 | 装甲 | 围城武器 | 第一次世界大战期间的技术 | 受伤 | 犯罪 | 俱乐部 | 牙齿 | 斧头 | 爪牙 | 牙齿 | 牙齿 | 牙齿 | 牙齿 | 牙齿等。指节 | 火焰喷射器 | 铲刀 | 吊索 | 矛 | 轴 | 刃 | 牌 | 钢 | 斧 | 战斧 | 劝说 | 劝说 | 石头 |  自卫 | 人类 | bc | 黑曜石 | 新石器 | 铜 | 金属 | 网络武器 | 指节 | w.d | 防御工事 | 防御工事 | 防御工事 | 防御工事 | 防御工事 | 防御工事 | 防御工事 | 防御工事 | 防御工事 | 防御工事 | 防御工事 | 防御工事 | 防御工事 | 武器 | 武器 | 武器 | 金属 | 武器 | 武器 | 武器 | 武器 | 武器 | 武器 | 武器 | 武器 |  武器 | 武器 | 武器 | 武器 | 武器 |炸弹 |导弹 |致命 |能力 |左轮手枪 |骑士 |常规 |运载 |核武器 |炮台 |弹道 |步兵 |使用"""
 
-                return DetectCategory(child_porn, bitcoin, drug, counterfeit, murder, hack, weapon, self.htmlcode)
+                return DetectCategory(str(child_porn), str(bitcoin), str(drug), str(counterfeit), str(murder), str(hack), str(weapon), (self.title + self.htmlcode), self.url)
 
         # 러시아어
         def ruC(self):
@@ -125,4 +130,4 @@ class analysis():
 
                 weapon = """оружие | меч | оружие | ракета | копье | огнестрельное оружие | боеприпасы | артиллерия | снаряжение | пистолет | бомба | лук | оружие | оружие | оружие | пушка | пушка | ружье | ружье | ракета | система оружия | война | вторая мировая война | военная | охота | инструмент | пик | бронзовый возраст | огнестрелка | танк | война | рок | оружие | рокили | оружие | взрывная | межконтинентальная баллистическая ракета | биологическая война | устройство | враг | сдерживающий | боковая техника | калибр | стрельба | элемент | тип | угроза | цель | опасный | автомобиль | военный корабль | армия | огонь | оружие массового уничтожения | боеприпасы | оружие | осада | технологии во время мировой войны i | травмы | клуба | зубов | ось | ось | кл | кл | кл | кл | кл. | ручки | огнестрелитель | шлинг | ланец | вал | лезвие | марка | сталь | хатхет | томахавк | wmd | убеждение | суазия | камень | самозащита | гоминиды | bc | obsidian | неолитичный | медь | металл | киберруз | ручки | w.m.d. | укрепления | катапина | рука | колес | речи | речи | речи | речи | речи | речи | речи | речи | речи | речи | речи | речи | речи |сенал | бомбы | ракеты | смертельные | способность | револьвер | рыцари | обычные | носить | ядерный | аккумулятор | баллистический | пехотный | использование"""
 
-                return DetectCategory(child_porn, bitcoin, drug, counterfeit, murder, hack, weapon, self.htmlcode)
+                return DetectCategory(str(child_porn), str(bitcoin), str(drug), str(counterfeit), str(murder), str(hack), str(weapon), (self.title + self.htmlcode), self.url)

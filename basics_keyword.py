@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 
 enC = {
-    "child_porn" : ['child porn', 'child sexual abuse', 'child', 'interpol', 'united states department of justice', 'pornography', 'video', 'sound recording, minor', 'pedophilia', 'child grooming', 'european commission', 'internet watch foundation', 'united states reports', 'law', 'photograph', 'sculpture', 'drawing', 'photography', 'painting', 'animation', 'coercion', 'censorship', 'clothing', 'lolicon', 'nudity', 'camera', 'massachusetts', 'recording'],
+    "child_porn" : ['child porn', 'child sexual abuse', 'child', 'interpol', 'united states department of justice', 'pornography', 'video', 'sound recording, minor', 'pedophilia', 'child grooming', 'european commission', 'internet watch foundation', 'united states reports', 'law', 'photograph', 'sculpture', 'drawing', 'photography', 'painting', 'animation', 'coercion', 'censorship', 'clothing', 'lolicon', 'nudity', 'camera', 'massachusetts', 'recording', 'CP'],
 
     "bitcoin" : ['bitcoin', 'blockchain', 'currency', 'bitcoin network', 'cryptography', 'node', 'satoshi nakamoto', 'open-source software', 'cryptocurrency wallet', 'cryptocurrency exchange', 'cryptocurrency', 'public-key cryptography', 'ethereum', 'qt', 'central bank', 'distributed ledger', 'university of cambridge', 'nobel memorial prize in economic sciences', 'gavin andresen', 'silk road', 'youtube', 'segwit', 'kraken', 'ledger', 'financial crimes enforcement network', 'forth', 'double-spending', 'lightning network', 'bitcoin cash', 'unit of account', 'digital signature', 'cryptographic hash', 'megabyte', 'winklevoss twins', 'synchronization', 'bitcoin xt', 'baidu', 'proof-of-concept', 'cve', 
                 'leveldb', 'nyse', 'micropayment', 'openssl', 'andreas antonopoulos', 'bitinstant', 'unicode', 'broadcasting', 'banknote', 'malleability'],
@@ -81,4 +81,17 @@ ruC = {
     "weapon" : [' ракеты', 'сенал', ' томахавк', ' ручки', ' пистолет', ' обычные', ' бронзовый возраст', ' смертельные', ' гоминиды', ' автомобиль', ' лезвие', ' самозащита', ' сталь', ' клуба', ' боковая техника', ' катапина', ' кл', ' осада', ' артиллерия', ' неолитичный', ' укрепления', ' сдерживающий', ' хатхет', ' рок', ' лук', ' аккумулятор', ' устройство', ' цель', ' obsidian', ' бомба', ' шлинг', ' зубов', ' убеждение', ' металл', ' пехотный', ' огнестрелитель', ' медь', ' биологическая война', ' речи', ' способность', ' взрывная', ' армия', ' копье', ' боеприпасы', ' снаряжение', ' угроза', ' ядерный', ' система оружия', ' война', ' межконтинентальная баллистическая ракета', ' ракета', ' использование', ' меч', ' марка', ' травмы', ' рыцари', ' wmd', ' военная', ' охота', ' тип', ' w.m.d.', ' ланец', ' опасный', ' вал', ' технологии во время мировой войны i', 'оружие', ' пушка', ' рокили', ' пик', ' танк', ' bc', ' враг', ' калибр', ' бомбы', ' носить', ' баллистический', ' киберруз', ' кл.', ' ружье', ' оружие', ' огнестрелка', ' суазия', ' револьвер', ' стрельба', ' военный корабль', ' огнестрельное оружие', ' инструмент', ' огонь', ' колес', ' оружие массового уничтожения', ' камень', ' элемент', ' рука', ' вторая мировая война', ' ось']
 }
 
-key = ["child_porn", "bitcoin", "drug", "counterfeit", "murder", "hack", "weapon"]
+key = ["child_porn", "drug", "counterfeit", "murder", "hack", "weapon"]
+
+def search(word):
+    for k in key:
+        if word in enC[k]:
+            return False
+        elif word in koC[k]:
+            return False
+        elif word in jaC[k]:
+            return False
+        elif word in chC[k]:
+            return False
+        elif word in ruC[k]:
+            return False

@@ -1,5 +1,4 @@
 from bs4 import BeautifulSoup
-import requests
 import time
 import re
 
@@ -30,7 +29,7 @@ class basics_parser():
         url_box=[]
         
         if Soup.text.find("Sorry, but Ahmia couldn't find results for")>=0:
-            return "unknown"
+            return url_box
         for a_tag in Soup.find_all('a', href=True):
             if a_tag["href"].find('url=')>=0:
                 url_box.append(a_tag['href'][a_tag["href"].find('url=')+4:])
@@ -66,7 +65,7 @@ class basics_parser():
         url_box=[]
         
         if Soup.text.find("returned 0 results.")>=0:
-            return "unknown"
+            return url_box
         for a_tag in Soup.find_all('a', href=True):
             url_box.append(a_tag['href'])
         
