@@ -1,5 +1,6 @@
 #-*- coding: utf-8 -*-
 import re
+from Dark_project import mongodb
 
 def DetectCategory(porno, bitcoin, drug, counterfeit, murder, hack, weapon, htmlcode, url):
         pornregex=re.compile(porno, re.I).findall(htmlcode)
@@ -11,30 +12,27 @@ def DetectCategory(porno, bitcoin, drug, counterfeit, murder, hack, weapon, html
         weaponregex=re.compile(weapon,re.I).findall(htmlcode)
 
         dictsvalues={
-                'pornregex':len(pornregex),
-                'counterfeitregex':len(counterfeitregex),
-                'bitcoinregex':len(bitcoinregex),
-                'murderregex':len(murderregex),
-                'drugregex':len(drugregex),
-                'hackregex':len(hackregex),
-                'weaponregex':len(weaponregex)
+                'porn':len(pornregex),
+                'counterfeit':len(counterfeitregex),
+                'bitcoin':len(bitcoinregex),
+                'murder':len(murderregex),
+                'drug':len(drugregex),
+                'hack':len(hackregex),
+                'weapon':len(weaponregex)
                 }
         
-        category = ""
         v = 0
         
         for valu in dictsvalues.keys():
-                v = v + valu
+                v = v + dictsvalues[valu]
         
         if v == 0:
-                category = "unknown"
+                pass
         else:
-                #DB에 dictsvalues 저장
-                pass
-        
-        if category == "unknown":
-                #DB에 unknown 저장
-                pass
+                for valu in dictsvalues.keys():
+                        if dictsvalues[valu] != 0:
+                                mongodb.DB_Url_insert(valu, url)
+
 
 class analysis():
         

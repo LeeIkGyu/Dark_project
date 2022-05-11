@@ -1,5 +1,7 @@
 from ast import keyword
 from bs4 import BeautifulSoup
+from pymongo import MongoClient
+import traceback
 import requests
 import re
 import zlib
@@ -10,6 +12,7 @@ from pytz import timezone
 from datetime import datetime
 import Snipping_Crawler
 import basics_keyword
+
 
 fmt = "%Y-%m-%d %H:%M:%S %Z%z"
 
@@ -147,51 +150,7 @@ def DBupload(url, engine, keyword, recursion_count):
             for urls in onion_box:
                 DBupload(urls, engine, keyword, recursion_count+1)
 
-def DB_insert(data): ## 데이터 추가, 삭제 및 변경 동작
-        try:     
-            client = MongoClient(host = 'localhost', port = 27017) 
-            DWdb = client['DWMongodb'] ## db name     
-            print('MongoDB - DWMongodb Connected Success') # 클라이언트(데베) 연결 성공 
 
-            #데이터 입 력
-            if len(data.keys()) == 11: # 포르노가 아닐 경우 
-                CrawlingData= {
-                    'Category' : data.get('category'),
-                    'Keyword' : data.get('keyword'),
-                    'Engine' : data.get('engine'),
-                    'URL' : data.get('url'),
-                    'Time' : data.get('time'),
-                    'State' : data.get('state'),
-                    'Server' : data.get('server'),
-                    'Code' : data.get('code'),
-                    'Title' : data.get('title'),
-                    'Language' : data.get('language')
-                }
-            else: # 아동 포르노일 경우 
-                CrawlingData = {
-                    'Category' : data.get('category'),
-                    'Keyword' : data.get('keyword'),
-                    'Engine' : data.get('engine'),
-                    'URL' : data.get('url'),
-                    'Time' : data.get('time'),
-                    'State' : data.get('state'),
-                    'Server' : data.get('server'),
-                    'Code' : data.get('code'),
-                    'Img' : data.get('img'),
-                    'Title' : data.get('title'),
-                    'Language' : data.get('language')
-                }
-            
-            CrawlingInfo_live = DWdb["CrawlingInfo_live"] # 실시간 데이터 들어갈 곳
-            CrawlingInfo_add = DWdb["CrawlingInfo_add"] #  초기에 정한 카테고리 이외의 데이터 
-
-            DWdb_Data = DWdb.CrawlingInfo_live.insert_one(CrawlingData) #데이터 삽입 
-            print('Data Insert Success')           
-
-        except:
-            print('Error')
-            print(traceback.format_exc())
-            
 
 def ResultToServer(onion_info, word):
     recursion_count=0

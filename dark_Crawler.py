@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import time
 import re
+from Dark_project import mongodb
 
 start = time.time()  # 시작 시간 저장
 #Url REGEX
@@ -45,6 +46,9 @@ class basics_parser():
                     onion_box = list(set(onion_box))
                     
         onion_box = list(set(onion_box))
+
+        onion_box = mongodb.DB_Compare(onion_box)
+
         return onion_box
     
     def tor(self):
@@ -78,6 +82,9 @@ class basics_parser():
                     onion_box = list(set(onion_box))
                     
         onion_box = list(set(onion_box))
+
+        onion_box = mongodb.DB_Compare(onion_box)
+
         return onion_box
 
 def Deduplication(*args):
