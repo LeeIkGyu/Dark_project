@@ -20,6 +20,7 @@ dictConfig({
             'class': 'logging.FileHandler',
             'filename': r'C:\Users\SCHCsRC\Desktop\코딩\파이썬\Project\log_{0}.log'.format(nowtime),
             'formatter': 'default',
+            'encoding' : 'utf-8'
         },
     },
     'root': {

@@ -1,18 +1,17 @@
-from ast import keyword
 from bs4 import BeautifulSoup
-from pymongo import MongoClient
-import traceback
 import requests
-import re
 import zlib
-import threading
-import dark_Crawler
-import basics_category
+from Dark_project import dark_Crawler
+from Dark_project import basics_category
+from Dark_project import darK_log
+from Dark_project import mongodb
+from Dark_project import basics_keyword
 from pytz import timezone
 from datetime import datetime
-import Snipping_Crawler
-import basics_keyword
-
+import time
+import threading
+from multiprocessing import Process
+import chardet
 
 fmt = "%Y-%m-%d %H:%M:%S %Z%z"
 
@@ -27,9 +26,9 @@ def info_return(htmlcode):
     lang = 'None'
     
     if htmlcode.find('title') is not None:
-        title = htmlcode.find('title').get_text().encode('utf-8')
+        title = htmlcode.find('title').get_text()
     elif htmlcode.find('TITLE') is not None:
-        title = htmlcode.find('TILE').get_text().encode('utf-8')
+        title = htmlcode.find('TILE').get_text()
         
     try:
         if htmlcode.find("html")["lang"]:
@@ -39,35 +38,32 @@ def info_return(htmlcode):
     
     return title, lang
 
-def category_return(lang, text):
-    category = ""
+def category_return(lang, text, url):
     
     if lang == 'en':
-        category = basics_category.analysis(text).enC()
+        basics_category.analysis(text, url).enC()
     elif lang == 'ko-KR':
-        category = basics_category.analysis(text).koC()
+        basics_category.analysis(text, url).koC()
     elif lang == 'ja':
-        category = basics_category.analysis(text).jaC()
+        basics_category.analysis(text, url).jaC()
     elif lang == 'zh-CN':
-        category = basics_category.analysis(text).chC()
+        basics_category.analysis(text, url).chC()
     elif lang == 'ru':
-        category = basics_category.analysis(text).ruC()
+        basics_category.analysis(text, url).ruC()
     else:
-        category = basics_category.analysis(text).enC()
-        
-    return category
+        basics_category.analysis(text, url).enC()
 
 def analysis(url):
     status = 'None'
     server = 'None'
-    title = 'None'.encode('utf-8')
+    textcode = ""
+    title = 'None'
     code = 'None'.encode('utf-8')
-    category = ""
     lang = ""
     nowtime = datetime.now(timezone('Asia/Seoul')).strftime(fmt)[:19]
     
     try:
-        res = session.get(url, timeout=10, headers={"Connection" : "close"})
+        res = session.get(url, headers={"Connection" : "close"})
         status = res.status_code
         requests_txt = res.text
 
@@ -75,88 +71,61 @@ def analysis(url):
 
         title, lang = info_return(Soup)
 
+        title_enco = chardet.detect(title.encode())
+        title.encode(title_enco.get('encoding'))
+
         if Soup.find('html') is not None:
             code = str(Soup.find('html')).encode('utf-8')
+            textcode = Soup.find('html').get_text()
         else:
             code = requests_txt.encode("utf-8")
+            textcode = Soup.get_text()
 
-        category = category_return(lang, title.decode('utf-8'))
-
-        if category == "unknown":
-            category = category_return(lang, requests_txt)
-            if category == "unknown":
-                category = "unknown"
+        category_return(lang, requests_txt, url)
 
         if 'server' in list(res.headers.keys()):
             server=res.headers['server']    
         elif 'Server' in list(res.headers.keys()):
             server=res.headers['Server']
-
+        
+        logging = "[URL : {0}] [Time : {1}] [Status : {2}] [Server : {3}] [Title : {4}] [Lang : {5}]".format(url, nowtime, status, server, title, lang)
         code=zlib.compress(code)
-        url_box = []
-        for a_tag in (Soup.find_all('a', href=True)):
-            url_box.append(a_tag['href'])
-        for form_tag in (Soup.find_all('form', action=True)):
-            url_box.append(form_tag['action'])
-        for iframe_tag in (Soup.find_all('iframe', src=True)):
-            url_box.append(iframe_tag['src'])
-        for img_tag in (Soup.find_all('img', src=True)):
-            url_box.append(img_tag['src'])
-        if(len(url_box)>=2):
-            url_box=list(set(url_box))
-
-        onion_box=[]
-
-        for url_one in url_box:
-            if re.findall(ANY_URL_REGEX, url_one)!=[]:
-                if url_one.find('.onion')>=0:
-                    onion_box.append(url_one)
-
-        onion_box = list(set(onion_box))
-        return category, url, nowtime, status, server, code, title, lang, onion_box
+        darK_log.log_info(logging)
+        return url, nowtime, status, server, code, title, lang, textcode
 
     except requests.exceptions.ConnectionError as e:
 		# Sockect is max Error
-        return 'unknown', url, nowtime,'unknown','unknown','unknown','unknown','unknown','unknown'
+        darK_log.log_error(e)
+        return url, nowtime,'unknown','unknown','unknown','unknown','unknown','unknown'
 
     except requests.exceptions.ReadTimeout as e:
 		# Connect fail (time out)
-        return 'unknown', url, nowtime,'unknown','unknown','unknown','unknown','unknown','unknown'
+        darK_log.log_error(e)
+        return url, nowtime,'unknown','unknown','unknown','unknown','unknown','unknown'
     
     except Exception as e:
         # Error
-        return 'unknown', url, nowtime,'unknown','unknown','unknown','unknown','unknown','unknown'
+        darK_log.log_error(e)
+        return url, nowtime,'unknown','unknown','unknown','unknown','unknown','unknown'
 
-def DBupload(url, engine, keyword, recursion_count):
-    category, url, nowtime, status, server, code, title, lang, onion_box = analysis(url)
-
-    if category == "unknown":
-        category = keyword
+def DBupload(url, engine, keyword):
+    url, nowtime, status, server, code, title, lang, textcode = analysis(url)
     
     if status != 'unknown':
-        if category != 'child porn':
-            img = Snipping_Crawler.snap(url, category, keyword, nowtime)
-            data = {'category':category,'keyword':keyword,'engine':engine,'url':url,'time':nowtime,'state':status,'server':server,'code':str(code),'img':img,'title':title,'language':lang}
-        else:
-            data = {'category':category,'keyword':keyword,'engine':engine,'url':url,'time':nowtime,'state':status,'server':server,'code':str(code),'title':title,'language':lang}
+        data = {'url':url,'engine':engine,'state':status,'server':server,'keyword':keyword,'title':title,'language':lang,'code':code,'textcode':textcode,'time':nowtime}
         
-        DB_insert(data)
+        mongodb.DB_insert(data)
         
-        if(recursion_count<=2 and type(onion_box)==list):
-            if(url in onion_box):
-                onion_box.remove(url)
-
-			#recursion_start
-            for urls in onion_box:
-                DBupload(urls, engine, keyword, recursion_count+1)
-
-
-
 def ResultToServer(onion_info, word):
-    recursion_count=0
+    thlist = []
     for onion_url in onion_info.keys():
         onion_engine=onion_info[onion_url]
-        DBupload(onion_url,onion_engine,word,recursion_count)
+        th = threading.Thread(target = DBupload, args = (onion_url,onion_engine,word))
+        th.start()
+        thlist.append(th)
+
+    for thread in thlist:
+                thread.join()
 
 def en(key):
     for Word in key:
@@ -210,19 +179,26 @@ def ru(key):
 
 if __name__ == "__main__":
     print("[*] Start [*]")
-    
-    if __name__ == "__main__":
-        print("[*] Start [*]")
-    
-    key = basics_keyword.key
-    crawler_t1 = threading.Thread(target=en, args=(key,))
-    crawler_t2 = threading.Thread(target=ko, args=(key,))
-    crawler_t3 = threading.Thread(target=ja, args=(key,))
-    crawler_t4 = threading.Thread(target=ch, args=(key,))
-    crawler_t5 = threading.Thread(target=ru, args=(key,))
+    start = time.perf_counter()
 
+    key = basics_keyword.key
+    crawler_t1 = Process(target=en, args=(key,))
+    crawler_t2 = Process(target=ko, args=(key,))
+    crawler_t3 = Process(target=ja, args=(key,))
+    crawler_t4 = Process(target=ch, args=(key,))
+    crawler_t5 = Process(target=ru, args=(key,))
     crawler_t1.start()
     crawler_t2.start()
     crawler_t3.start()
     crawler_t4.start()
     crawler_t5.start()
+    
+    crawler_t1.join()
+    crawler_t2.join()
+    crawler_t3.join()
+    crawler_t4.join()
+    crawler_t5.join()
+    
+    finish = time.perf_counter()
+    
+    print(f'Finished in {round(finish-start, 2)} second(s)')

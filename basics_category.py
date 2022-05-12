@@ -32,12 +32,9 @@ def DetectCategory(porno, bitcoin, drug, counterfeit, murder, hack, weapon, html
                 for valu in dictsvalues.keys():
                         if dictsvalues[valu] != 0:
                                 mongodb.DB_Url_insert(valu, url)
-
-
 class analysis():
         
-        def __init__(self, title, text, url):
-                self.title = title
+        def __init__(self, text, url):
                 self.htmlcode = text
                 self.url = url
         # 영어
@@ -56,7 +53,7 @@ class analysis():
 
                 weapon = """weapon | sword | gun | missile | spear | firearm | ammunition | artillery | projectile | rifle | pistol | bomb | bow | weaponry | arm | arms | knife | munition | cannon | guns | shotgun | tool | gunpowder | rocket | weapon system | world war ii | military | hunting | instrument | pike | bronze age | firearms | tank | war | machine gun | animal | fire ship | warfare | warhead | rock | armor | weapons | explosive | intercontinental ballistic missile | biological warfare | device | enemy | deterrent | sidearm | machine | caliber | firing | element | type | threat | target | dangerous | vehicle | warship | army | fire | weapon of mass destruction | ammo | power | armour | siege weapon | technology during world war i | injury | crime | club | teeth | axe | claw | tusk | knuckles | flamethrower | slasher | sling | lance | shaft | blade | brand | steel | hatchet | tomahawk | wmd | persuasion | suasion | stone | self-defense | hominids | bc | obsidian | neolithic | copper | metal | cyberweapon | knucks | w.m.d. | fortifications | catapult | spoke | chariot | china | cavalry | assault | handgun | europe | capable | explosives | trireme | possessing | arsenal | bombs | missiles | lethal | capability | revolver | knights | conventional | carry | nuclear | battery | ballistic | infantry | using"""
 
-                return DetectCategory(str(child_porn), str(bitcoin), str(drug), str(counterfeit), str(murder), str(hack), str(weapon), (self.title + self.htmlcode), self.url)
+                return DetectCategory(str(child_porn), str(bitcoin), str(drug), str(counterfeit), str(murder), str(hack), str(weapon), (self.htmlcode), self.url)
 
         # 한국어
         def koC(self):
@@ -74,7 +71,7 @@ class analysis():
 
                 weapon = """무기 | 칼 | 총 | 미사일 | 창 | 화기 | 탄약 | 포 | 발사체 | 소총 | 권총 | 폭탄 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 제2차 세계 대전 | 군사 | 사냥 | 기구 | 청동기 시대 | 무기 | 탱크 | 기관총 | 동물 | 화약 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무 기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기 | 무기또는 무기 | 폭발물 | 대륙간탄도미사일 | 생물전 | 장치 | 적 | 억지력 | 사이드암 | 기계 | 구경 | 사격 | 요소 | 종류 | 위협 | 표적 | 위험 | 차량 | 군함 | 군함 | 화기 | 탄약 | 전력 | 장갑 | 공성 무기 | 기술 | 세계 대전 중의 기술 | 부상 | 클럽 | 이빨 | 발톱 | 발톱 | 손가락 마디 | 화염방사기 |  슬래셔 | 슬래셔 | 랜스 | 샤프트 | 브랜드 | 스틸 | 도끼 | wmd | 설득 | 설득 | 돌 | 정당방위 | 호민관 | bc | 흑요석 | 신석기 | 구리 | 금속 | 사이버 무기 | nucks | w.d | 요새 | 캐터펄트 | 말 | 전차 | 중국 | 기병 | 공격 | 유럽 | 폭발물 | 유럽 | 폭발물 | 폭발물 | 폭발물 | 폭발물 | 폭발물 | 폭발물 | 폭발물 | 폭발물 | 폭발물 | 폭발물 | 폭발물 | 폭발물 | 폭발물 | 폭발물센서 | 폭탄 | 미사일 | 필 살기 | 능력 | 리볼버 | 기사 | 재래식 | 운반 | 핵 | 배터리 | 탄도 | 보병 | 사용"""
 
-                return DetectCategory(str(child_porn), str(bitcoin), str(drug), str(counterfeit), str(murder), str(hack), str(weapon), (self.title + self.htmlcode), self.url)
+                return DetectCategory(str(child_porn), str(bitcoin), str(drug), str(counterfeit), str(murder), str(hack), str(weapon), (self.htmlcode), self.url)
 
         # 일본어
         def jaC(self):
@@ -92,7 +89,7 @@ class analysis():
 
                 weapon = """ロケット |  射撃 |  歩兵 |  ナック |  危険物 |  火 |  矛 |  要素 |  騎士 |  軍艦 |  説得 |  抑止力 |  生物戦 |  脅威 |  世界大戦中の技術 |  軍事 |  大砲 |  サイバー兵器 |  威力 |  ブレード |  金属 |  斧 |  戦争 |  新石器 |  岩 |  牙 |  標的 |  必殺技 |  爆弾 |  中国 |  剣 |  ライフル |  核 |  スポーク |  ヒト科 |  機械 |  包囲兵器 |  装置 |  ブランド |  銅 |  火炎放射器 |  所持 |  兵 器システム |  陸軍 |  負傷 |  護身術 |  戦車 |  保有 |  消防艦 |  青銅器 |  口径 |  発射体 |  スリング |  ヨーロッパ |  トライム |  シャフト |  ハンドガン |  車両 |  ミサイル |  能 力 |  型式 |   弓 |  兵器 |  ランス |  犯罪 |  通常 |  装甲 |  弾薬 |  キャリー |  大量破壊 兵器 |  第二次世界大戦 |  道具 |  兵器扇形 |  黒曜石 |  サイドアーム |  大陸間弾道ミサイル |  カタパルト |  爪 |  バッテリー |  ピストル |  銃 |  武器又は武器 |  石 |  bc |  w.m.d. |  火薬 |  砲 |  騎兵 |  ショットガン |  器具 |  トマホーク |  弾道 |  リボルバー |  鋼 |  槍 |  使用 |  スラッシャー |  ナイフ |   火器 |  狩猟 |  機関 銃 |   ナックルズ |  クラブ |  武器 |  攻撃 |  敵 |  動物 |  要塞 |  大量破壊兵器 |  爆発物"""
 
-                return DetectCategory(str(child_porn), str(bitcoin), str(drug), str(counterfeit), str(murder), str(hack), str(weapon), (self.title + self.htmlcode), self.url)
+                return DetectCategory(str(child_porn), str(bitcoin), str(drug), str(counterfeit), str(murder), str(hack), str(weapon), (self.htmlcode), self.url)
 
         # 중국어
         def chC(self):
@@ -110,7 +107,7 @@ class analysis():
 
                 weapon = """武器 | 剑 | 枪 | 导弹 | 矛 | 火器 | 弹药 | 炮 | 射弹 | 步枪 | 手枪 | 炸弹 | 弓 | 武器 | 武器 | 武器 | 武器 | 武器 | 武器 | 武器 | 大炮 | 枪 | 枪 | 枪 | 猎枪 | 工具 | 火药 | 火箭 | 武器系统 | 二战 | 军事 | 狩猎 | 武器 | 枪械 | 青铜器 | 坦克 | 战争 | 战争 | 动物 | 消防船 | 战争 | 弹头 | 岩石 | 武器系统或武器 | 爆炸物 | 洲际弹道导弹 | 生物战 | 敌方 | 威慑 | 侧肩 | 机枪 | 口径 | 射击 | 元件 | 类型 | 威胁 | 目标 | 危险 | 车辆 | 军舰 | 火种 | 大规模杀伤性武器 | 弹 药 | 弹药 | 装甲 | 围城武器 | 第一次世界大战期间的技术 | 受伤 | 犯罪 | 俱乐部 | 牙齿 | 斧头 | 爪牙 | 牙齿 | 牙齿 | 牙齿 | 牙齿 | 牙齿等。指节 | 火焰喷射器 | 铲刀 | 吊索 | 矛 | 轴 | 刃 | 牌 | 钢 | 斧 | 战斧 | 劝说 | 劝说 | 石头 |  自卫 | 人类 | bc | 黑曜石 | 新石器 | 铜 | 金属 | 网络武器 | 指节 | w.d | 防御工事 | 防御工事 | 防御工事 | 防御工事 | 防御工事 | 防御工事 | 防御工事 | 防御工事 | 防御工事 | 防御工事 | 防御工事 | 防御工事 | 防御工事 | 武器 | 武器 | 武器 | 金属 | 武器 | 武器 | 武器 | 武器 | 武器 | 武器 | 武器 | 武器 |  武器 | 武器 | 武器 | 武器 | 武器 |炸弹 |导弹 |致命 |能力 |左轮手枪 |骑士 |常规 |运载 |核武器 |炮台 |弹道 |步兵 |使用"""
 
-                return DetectCategory(str(child_porn), str(bitcoin), str(drug), str(counterfeit), str(murder), str(hack), str(weapon), (self.title + self.htmlcode), self.url)
+                return DetectCategory(str(child_porn), str(bitcoin), str(drug), str(counterfeit), str(murder), str(hack), str(weapon), (self.htmlcode), self.url)
 
         # 러시아어
         def ruC(self):
@@ -128,4 +125,4 @@ class analysis():
 
                 weapon = """оружие | меч | оружие | ракета | копье | огнестрельное оружие | боеприпасы | артиллерия | снаряжение | пистолет | бомба | лук | оружие | оружие | оружие | пушка | пушка | ружье | ружье | ракета | система оружия | война | вторая мировая война | военная | охота | инструмент | пик | бронзовый возраст | огнестрелка | танк | война | рок | оружие | рокили | оружие | взрывная | межконтинентальная баллистическая ракета | биологическая война | устройство | враг | сдерживающий | боковая техника | калибр | стрельба | элемент | тип | угроза | цель | опасный | автомобиль | военный корабль | армия | огонь | оружие массового уничтожения | боеприпасы | оружие | осада | технологии во время мировой войны i | травмы | клуба | зубов | ось | ось | кл | кл | кл | кл | кл. | ручки | огнестрелитель | шлинг | ланец | вал | лезвие | марка | сталь | хатхет | томахавк | wmd | убеждение | суазия | камень | самозащита | гоминиды | bc | obsidian | неолитичный | медь | металл | киберруз | ручки | w.m.d. | укрепления | катапина | рука | колес | речи | речи | речи | речи | речи | речи | речи | речи | речи | речи | речи | речи | речи |сенал | бомбы | ракеты | смертельные | способность | револьвер | рыцари | обычные | носить | ядерный | аккумулятор | баллистический | пехотный | использование"""
 
-                return DetectCategory(str(child_porn), str(bitcoin), str(drug), str(counterfeit), str(murder), str(hack), str(weapon), (self.title + self.htmlcode), self.url)
+                return DetectCategory(str(child_porn), str(bitcoin), str(drug), str(counterfeit), str(murder), str(hack), str(weapon), (self.htmlcode), self.url)
