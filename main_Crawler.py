@@ -12,6 +12,10 @@ import time
 import threading
 from multiprocessing import Process
 import chardet
+import re
+import warnings
+
+warnings.filterwarnings("ignore", category=UserWarning, module='bs4')
 
 fmt = "%Y-%m-%d %H:%M:%S %Z%z"
 
@@ -40,15 +44,15 @@ def info_return(htmlcode):
 
 def category_return(lang, text, url):
     
-    if lang == 'en':
+    if re.compile(lang, re.I).findall("en en-au en-bz en-ca en-ie en-jm en-nz en-za en-tt en-gb en-us"):
         basics_category.analysis(text, url).enC()
-    elif lang == 'ko-KR':
+    elif re.compile(lang, re.I).findall("ko ko-kr"):
         basics_category.analysis(text, url).koC()
-    elif lang == 'ja':
+    elif re.compile(lang, re.I).findall("ja"):
         basics_category.analysis(text, url).jaC()
-    elif lang == 'zh-CN':
+    elif re.compile(lang, re.I).findall("zh-hk zh-cn zh-sg zh-tw"):
         basics_category.analysis(text, url).chC()
-    elif lang == 'ru':
+    elif re.compile(lang, re.I).findall("ru ru-md"):
         basics_category.analysis(text, url).ruC()
     else:
         basics_category.analysis(text, url).enC()

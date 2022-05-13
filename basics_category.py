@@ -26,9 +26,7 @@ def DetectCategory(porno, bitcoin, drug, counterfeit, murder, hack, weapon, html
         for valu in dictsvalues.keys():
                 v = v + dictsvalues[valu]
         
-        if v == 0:
-                pass
-        else:
+        if v != 0:
                 for valu in dictsvalues.keys():
                         if dictsvalues[valu] != 0:
                                 mongodb.DB_Url_insert(valu, url)

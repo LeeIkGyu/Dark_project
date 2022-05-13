@@ -2,9 +2,10 @@ from pymongo import MongoClient
 import traceback ## error 위치(정보) 표시하기 위해 사용 
 from Dark_project import darK_log
 
+client = MongoClient(connect = False, host = 'localhost', port = 27017)
+
 def DB_insert(data): ## 데이터 추가, 삭제 및 변경 동작
         try:     
-            client = MongoClient(host = 'localhost', port = 27017) 
             DWdb = client['DWMongodb'] ## db name     
             # print('MongoDB - DWMongodb Connected Success') # 클라이언트(데베) 연결 성공 
             #데이터 입 
@@ -22,7 +23,6 @@ def DB_insert(data): ## 데이터 추가, 삭제 및 변경 동작
             }
             
             CrawlingInfo_live = DWdb["CrawlingInfo_live"] # 실시간 데이터 들어갈 곳 
-
             DWdb_Data = DWdb.CrawlingInfo_live.insert_one(CrawlingData) #데이터 삽입 
             # print('Data Insert Success')           
 
@@ -31,7 +31,6 @@ def DB_insert(data): ## 데이터 추가, 삭제 및 변경 동작
 
 def DB_Url_insert(value, url_data):
     try:
-        client = MongoClient(host ='localhost', port = 27017)
         DWdb_url = client['DWMongodb_url']
         # print('MongoDB - DWMongodb_url Connected Success')
 
@@ -50,12 +49,11 @@ def DB_Url_insert(value, url_data):
 
 def DB_Compare(urls):
     try:
-        client = MongoClient(host = 'localhost', port = 27017)
         DWdb = client['DWMongodb'] ## db name     
         # print('MongoDB - DWMongodb Connected Success') # 클라이언트(데베) 연결 성공 
 
         for url in urls:
-            if DWdb.CrawlingInfo_live.find({'URL':{'$regex':url}}):
+            if list(DWdb.CrawlingInfo_live.find({'URL':{'$regex':url}})) != []:
                 urls.remove(url)
         
         return urls
