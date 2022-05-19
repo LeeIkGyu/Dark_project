@@ -2,8 +2,9 @@ from logging.config import dictConfig
 from pytz import timezone
 from datetime import datetime
 import logging
+import os
 
-fmt = "%Y-%m-%d"
+fmt = "%Y_%m_%d"
 
 nowtime = datetime.now(timezone('Asia/Seoul')).strftime(fmt)
 
@@ -28,6 +29,13 @@ dictConfig({
         'handlers': ['file']
     }
 })
+
+def Create_log_file():
+    if not os.path.isfile(r'C:\Users\SCHCsRC\Desktop\코딩\파이썬\Project\log_{0}.log'.format(nowtime)):
+        file = open(r'C:\Users\SCHCsRC\Desktop\코딩\파이썬\Project\log_{0}.log'.format(nowtime), 'r', encoding='utf-8')
+        file.close()
+
+Create_log_file()
 
 def log_info(message):
     logging.info(message)

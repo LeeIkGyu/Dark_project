@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 import re
-from Dark_project import mongodb
+import mongodb
 
 def DetectCategory(porno, bitcoin, drug, counterfeit, murder, hack, weapon, htmlcode, url):
         pornregex=re.compile(porno, re.I).findall(htmlcode)
