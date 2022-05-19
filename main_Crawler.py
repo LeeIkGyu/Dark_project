@@ -25,19 +25,6 @@ session = requests.session()
 session.proxies = {'http': 'socks5h://localhost:9150',
                     'https': 'socks5h://localhost:9150'}
 
-def Compare(urls, onion_list):
-    lock = Lock()
-    try:
-        lock.acquire()
-        for url in urls:
-            if url in onion_list:
-                urls.remove(url)
-            else:
-                onion_list.append(url)
-        return urls
-    finally:
-        lock.release()
-
 def info_return(htmlcode):
     title = 'None'
     lang = 'None'
@@ -144,78 +131,66 @@ def ResultToServer(onion_info, word):
     for thread in thlist:
                 thread.join()
 
-def en(key, onion_list):
+def en(key):
     for Word in key:
         for basics in basics_keyword.enC[Word]:
             search_class=dark_Crawler.basics_parser(basics,session)
             dicts={}
             ahmiavalue={'ahmia':search_class.ahmia()}
-            ahmiavalue['ahmia']=Compare(ahmiavalue['ahmia'], onion_list)
             torSearchvalue={'torSearch':search_class.tor()}
-            torSearchvalue['torSearch']=Compare(torSearchvalue['torSearch'], onion_list)
             dicts.update(dark_Crawler.Deduplication(torSearchvalue,ahmiavalue))
             ResultToServer(dicts, basics)
 
-def ko(key, onion_list):
+def ko(key):
     for Word in key:
         for basics in basics_keyword.koC[Word]:
             search_class=dark_Crawler.basics_parser(basics,session)
             dicts={}
             ahmiavalue={'ahmia':search_class.ahmia()}
-            ahmiavalue['ahmia']=Compare(ahmiavalue['ahmia'], onion_list)
             torSearchvalue={'torSearch':search_class.tor()}
-            torSearchvalue['torSearch']=Compare(torSearchvalue['torSearch'], onion_list)
             dicts.update(dark_Crawler.Deduplication(torSearchvalue,ahmiavalue))
             ResultToServer(dicts, basics)
 
-def ja(key, onion_list):
+def ja(key):
     for Word in key:
         for basics in basics_keyword.jaC[Word]:
             search_class=dark_Crawler.basics_parser(basics,session)
             dicts={}
             ahmiavalue={'ahmia':search_class.ahmia()}
-            ahmiavalue['ahmia']=Compare(ahmiavalue['ahmia'], onion_list)
             torSearchvalue={'torSearch':search_class.tor()}
-            torSearchvalue['torSearch']=Compare(torSearchvalue['torSearch'], onion_list)
             dicts.update(dark_Crawler.Deduplication(torSearchvalue,ahmiavalue))
             ResultToServer(dicts, basics)
 
-def ch(key, onion_list):
+def ch(key):
     for Word in key:
         for basics in basics_keyword.chC[Word]:
             search_class=dark_Crawler.basics_parser(basics,session)
             dicts={}
             ahmiavalue={'ahmia':search_class.ahmia()}
-            ahmiavalue['ahmia']=Compare(ahmiavalue['ahmia'], onion_list)
             torSearchvalue={'torSearch':search_class.tor()}
-            torSearchvalue['torSearch']=Compare(torSearchvalue['torSearch'], onion_list)
             dicts.update(dark_Crawler.Deduplication(torSearchvalue,ahmiavalue))
             ResultToServer(dicts, basics)
 
-def ru(key, onion_list):
+def ru(key):
     for Word in key:
         for basics in basics_keyword.ruC[Word]:
             search_class=dark_Crawler.basics_parser(basics,session)
             dicts={}
             ahmiavalue={'ahmia':search_class.ahmia()}
-            ahmiavalue['ahmia']=Compare(ahmiavalue['ahmia'], onion_list)
             torSearchvalue={'torSearch':search_class.tor()}
-            torSearchvalue['torSearch']=Compare(torSearchvalue['torSearch'], onion_list)
             dicts.update(dark_Crawler.Deduplication(torSearchvalue,ahmiavalue))
             ResultToServer(dicts, basics)
 
 if __name__ == "__main__":
     print("[*] Start [*]")
     start = time.perf_counter()
-    manager = Manager()
-    onion_list = manager.list()
     key = basics_keyword.key
     
-    crawler_t1 = Process(target=en, args=(key,onion_list,))
-    crawler_t2 = Process(target=ko, args=(key,onion_list,))
-    crawler_t3 = Process(target=ja, args=(key,onion_list,))
-    crawler_t4 = Process(target=ch, args=(key,onion_list,))
-    crawler_t5 = Process(target=ru, args=(key,onion_list,))
+    crawler_t1 = Process(target=en, args=(key,))
+    crawler_t2 = Process(target=ko, args=(key,))
+    crawler_t3 = Process(target=ja, args=(key,))
+    crawler_t4 = Process(target=ch, args=(key,))
+    crawler_t5 = Process(target=ru, args=(key,))
     crawler_t1.start()
     crawler_t2.start()
     crawler_t3.start()

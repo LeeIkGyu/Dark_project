@@ -1,9 +1,6 @@
-from attr import s
 from pymongo import MongoClient
 import traceback ## error 위치(정보) 표시하기 위해 사용 
 import darK_log
-import threading
-import main_Crawler
 
 client = MongoClient(connect = False, host = 'localhost', port = 27017)
 
@@ -50,14 +47,14 @@ def DB_Url_insert(value, url_data):
     except:
         darK_log.log_error(traceback.format_exc())
 
-# def DB_Compare(urls):
-#     lock = threading.Lock()
-#     lock.acquire()
-#     try:
-#         for url in urls:
-#             if url in main_Crawler.onion_df:
-#                 urls.remove(url)
-#         main_Crawler.onion_df.append(urls)
-#         return urls
-#     finally:
-#         lock.release()
+def DB_Compare(urls):
+    try:
+        DWdb = client['DWMongodb']
+        
+        for url in urls:
+            if list(DWdb.CrawlingInfo_live.find({"URL" : url})) != []:
+                urls.remove(url)
+
+        return urls
+    except:
+        darK_log.log_error(traceback.format_exc())
