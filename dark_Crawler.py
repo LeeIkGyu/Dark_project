@@ -1,8 +1,6 @@
 from bs4 import BeautifulSoup
 import time
 import re
-import mongodb
-import main_Crawler
 
 start = time.time()  # 시작 시간 저장
 #Url REGEX
