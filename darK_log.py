@@ -19,7 +19,7 @@ dictConfig({
         'file': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': r'C:\Users\SCHCsRC\Desktop\코딩\파이썬\Project\log_{0}.log'.format(nowtime),
+            'filename': r'C:\Users\SCHCsRC\Desktop\Code\Python\Project\log_{0}.log'.format(nowtime),
             'formatter': 'default',
             'encoding' : 'utf-8'
         },
@@ -31,14 +31,14 @@ dictConfig({
 })
 
 def Create_log_file():
-    if not os.path.isfile(r'C:\Users\SCHCsRC\Desktop\코딩\파이썬\Project\log_{0}.log'.format(nowtime)):
-        file = open(r'C:\Users\SCHCsRC\Desktop\코딩\파이썬\Project\log_{0}.log'.format(nowtime), 'r', encoding='utf-8')
+    if not os.path.isfile(r'C:\Users\SCHCsRC\Desktop\Code\Python\Project\log_{0}.log'.format(nowtime)):
+        file = open(r'C:\Users\SCHCsRC\Desktop\Code\Python\Project\log_{0}.log'.format(nowtime), 'r', encoding='utf-8')
         file.close()
 
 Create_log_file()
 
-def log_info(message):
-    logging.info(message)
+# def log_info(message):
+#     logging.info(message)
     
 def log_error(message):
     logging.error(message)

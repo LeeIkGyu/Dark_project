@@ -92,9 +92,7 @@ def analysis(url):
         elif 'Server' in list(res.headers.keys()):
             server=res.headers['Server']
         
-        logging = "[URL : {0}] [Time : {1}] [Status : {2}] [Server : {3}] [Title : {4}] [Lang : {5}]".format(url, nowtime, status, server, title, lang)
         code=zlib.compress(code)
-        darK_log.log_info(logging)
         return url, nowtime, status, server, code, title, lang, textcode
 
     except requests.exceptions.ConnectionError as e:
