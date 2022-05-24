@@ -10,7 +10,7 @@ from pytz import timezone
 from datetime import datetime
 import time
 import threading
-from multiprocessing import Process, Manager, Lock
+from multiprocessing import Process
 import chardet
 import re
 import warnings
@@ -125,6 +125,7 @@ def ResultToServer(onion_info, word):
     for onion_url in onion_info.keys():
         onion_engine=onion_info[onion_url]
         th = threading.Thread(target = DBupload, args = (onion_url,onion_engine,word))
+        th.setDaemon(True)
         th.start()
         thlist.append(th)
 
