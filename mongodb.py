@@ -1,3 +1,4 @@
+"""MongoDB 모듈"""
 from pymongo import MongoClient
 import traceback ## error 위치(정보) 표시하기 위해 사용 
 import darK_log
@@ -29,9 +30,9 @@ def DB_insert(data): ## 데이터 추가, 삭제 및 변경 동작
         except:
             darK_log.log_error(traceback.format_exc())
 
-def DB_Url_insert(value, url_data):
+def DB_Url_insert(value, url_data): ## 카테고리 및 URL 저장
     try:
-        DWdb_url = client['DWMongodb_url']
+        DWdb_url = client['DWMongodb_url'] ## DB 네임
         # print('MongoDB - DWMongodb_url Connected Success')
 
         CrawlingUrlData ={
@@ -47,10 +48,12 @@ def DB_Url_insert(value, url_data):
     except:
         darK_log.log_error(traceback.format_exc())
 
+"""URL 비교 함수"""
 def DB_Compare(urls):
     try:
         DWdb = client['DWMongodb']
         
+        """파싱한 URL들을 DB의 URL들과 비교하여 중복제거"""
         for url in urls:
             if list(DWdb.CrawlingInfo_live.find({"URL" : url})) != []:
                 urls.remove(url)

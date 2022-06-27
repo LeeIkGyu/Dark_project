@@ -1,8 +1,11 @@
 #-*- coding: utf-8 -*-
+"""URL에 카테고리를 지정하는 모듈"""
 import re
 import mongodb
 
+"""카테고리를 스코어링 형태로 지정"""
 def DetectCategory(porno, bitcoin, drug, counterfeit, murder, hack, weapon, htmlcode, url):
+        """html 코드에서 각 카테고리에 저장되어 있는 단어가 있는지 찾음"""
         pornregex=re.compile(porno, re.I).findall(htmlcode)
         counterfeitregex=re.compile(counterfeit,re.I).findall(htmlcode)
         bitcoinregex=re.compile(bitcoin,re.I).findall(htmlcode)
@@ -10,7 +13,8 @@ def DetectCategory(porno, bitcoin, drug, counterfeit, murder, hack, weapon, html
         drugregex=re.compile(drug,re.I).findall(htmlcode)
         hackregex=re.compile(hack,re.I).findall(htmlcode)
         weaponregex=re.compile(weapon,re.I).findall(htmlcode)
-
+        
+        """단어들을 개수로 변경"""
         dictsvalues={
                 'porn':len(pornregex),
                 'counterfeit':len(counterfeitregex),
@@ -26,8 +30,10 @@ def DetectCategory(porno, bitcoin, drug, counterfeit, murder, hack, weapon, html
         for valu in dictsvalues.keys():
                 v = v + dictsvalues[valu]
         
+        """총 개수가 0이 아니면 TRUE"""
         if v != 0:
                 for valu in dictsvalues.keys():
+                        """카테고리에 맞는 단어의 수가 0이 아니면 카테고리를 url과 저장"""
                         if dictsvalues[valu] != 0:
                                 mongodb.DB_Url_insert(valu, url)
 class analysis():
